@@ -50,7 +50,7 @@ def messageReceived(args):
 
 def main():
 
-	output = messageReceived(os.getenv("NTFY_MESSAGE"))
+	output = messageReceived([os.getenv("NTFY_MESSAGE")])
 	topic = os.getenv("NTFY_TOPIC")
 	server = args[2]
 	print output
