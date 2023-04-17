@@ -50,12 +50,11 @@ def messageReceived(args):
 
 def main(args):
 
-	output = messageReceived(args)
-	topic = args[1]
+	output = messageReceived(os.getenv("NTFY_MESSAGE"))
+	topic = os.getenv("NTFY_TOPIC")
 	server = args[2]
 	print output
 	sendMessage(str(output),"RESPOSTA",server)
 
 if __name__ == '__main__':
-	args = sys.argv
-	main(args[1:])
+	main()
