@@ -48,7 +48,7 @@ def messageReceived(args):
 
 	return response
 
-def main(args):
+def main():
 
 	output = messageReceived(os.getenv("NTFY_MESSAGE"))
 	topic = os.getenv("NTFY_TOPIC")
