@@ -48,13 +48,14 @@ def messageReceived(args):
 
 	return response
 
-def main():
+def main(args):
 
 	output = messageReceived([os.getenv("NTFY_MESSAGE")])
 	topic = os.getenv("NTFY_TOPIC")
-	server = args[2]
+	server = args[0]
 	print output
 	sendMessage(str(output),"RESPOSTA",server)
 
 if __name__ == '__main__':
-	main()
+	args = sys.argv
+	main(args)
