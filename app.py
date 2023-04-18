@@ -15,6 +15,8 @@ def sendMessage(message,channel,server,headers = {}):
 def parseCommand(command,args):
 
 	output = None
+	print command 
+	print args
 	f = getRoute(command,script_path=os.path.abspath(os.path.dirname(__file__)))
 	if f is not None:
 		output = eval(f + "("+ str(args) +")")

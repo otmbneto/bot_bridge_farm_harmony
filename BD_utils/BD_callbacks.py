@@ -72,18 +72,22 @@ def rendering_files(file):
 def getQueueStatus(args):
 
   if len(args) > 0:
-    queue = args[-1]
+    queues = args[-1].split(",")
 
-  queue = queue if not queue.endswith(("\\","/")) else queue[:-1]
-  queue_files = get_queue_files(queue=queue)
-  current_render = get_current_render(queue_files)
+  output = ""
+  for queue in queues:
+    queue = queue if not queue.endswith(("\\","/")) else queue[:-1]
+    queue_files = get_queue_files(queue=queue)
+    current_render = get_current_render(queue_files)
 
-  output = "NOME DA FILA: {0}\n".format(os.path.basename(queue))
-  output += "RENDERIZANDO: {0}\n".format(sf.get_path(current_render[0]) if len(current_render) > 0 else "Nada no momento")
-  if len(current_render) > 0:
-    render_time = getRenderTime(sf.getFileContent(current_render[0]))
-    output += "TEMPO DE RENDER: {0}\n".format(render_time)
-  output += "TAMANHO DA FILA: {0}\n".format(len(queue_files))
+    output += "NOME DA FILA: {0}\n".format(os.path.basename(queue))
+    output += "RENDERIZANDO: {0}\n".format(sf.get_path(current_render[0]) if len(current_render) > 0 else "Nada no momento")
+    if len(current_render) > 0:
+      render_time = getRenderTime(sf.getFileContent(current_render[0]))
+      output += "TEMPO DE RENDER: {0}\n".format(render_time)
+    output += "TAMANHO DA FILA: {0}\n".format(len(queue_files))
+    output += "-------------------------------\n"
+  
   return unicode(output,"utf-8")
 
 def get_status_priority(file):
@@ -124,29 +128,31 @@ def get_renders(keyword,queue=os.getenv("QUEUE_PATH")):
 def checkRenderStatus(args):
 
   keyword = ""
-  queue = None
   if len(args) > 0:
     keyword= args[0]
-    queue = args[-1]  
-  print queue
-  scenes = get_renders(keyword,queue = queue)
-  queue_name = os.path.basename(queue if not queue.endswith(("\\","/")) else queue[:-1])
-  msg = "FILA: {0}\n".format(queue_name)
-  error_msg = "Nenhuma cena foi encontrada!"
-  for scene,index in scenes:
+    queues = args[-1].split(",")  
+  
+  output = ""
+  for queue in queues:
+    print queue
+    scenes = get_renders(keyword,queue = queue)
+    queue_name = os.path.basename(queue if not queue.endswith(("\\","/")) else queue[:-1])
+    msg = "FILA: {0}\n".format(queue_name)
+    error_msg = "Nenhuma cena foi encontrada!\n"
+    for scene,index in scenes:
 
-    error_msg = ""
-    scene_name = sf.get_name(scene).replace(".json","")
-    scene_file = sf.getFileContent(scene)
-    msg+="-------------------------------\nCENA: {0}\nPOSICAO NA FILA: {1}\nSTATUS:{2}\nTentativas: {3}\n"
-    if scene_file["status"] == "rendering":
-      renderTime = getRenderTime(scene_file)
-      msg+="Renderizando por {}\n".format(renderTime)
-    tries = len(scene_file["_render_tries"]) if "_render_tries" in scene_file.keys() else 0
-    msg = msg.format(scene_name,index+1,scene_file["status"],tries)
+      error_msg = ""
+      scene_name = sf.get_name(scene).replace(".json","")
+      scene_file = sf.getFileContent(scene)
+      msg+="-------------------------------\nCENA: {0}\nPOSICAO NA FILA: {1}\nSTATUS:{2}\nTentativas: {3}\n"
+      if scene_file["status"] == "rendering":
+        renderTime = getRenderTime(scene_file)
+        msg+="Renderizando por {}\n".format(renderTime)
+      tries = len(scene_file["_render_tries"]) if "_render_tries" in scene_file.keys() else 0
+      msg = msg.format(scene_name,index+1,scene_file["status"],tries)
 
-  msg += error_msg
-  output = msg if len(msg) > 0 else "Nenhum render foi encontrado na fila {0}".format(queue_name)
+    msg += error_msg
+    output += msg if len(msg) > 0 else "Nenhum render foi encontrado na fila {0}\n".format(queue_name)
   
   return unicode(output,"utf-8")
 
