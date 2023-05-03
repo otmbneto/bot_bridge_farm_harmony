@@ -23,10 +23,8 @@ def parseCommand(command,args):
 
 	return output
 
-def messageReceived(args):
+def messageReceived(request):
 
-	print args[0].replace("'","\"")
-	request = json.loads(args[0].replace("'","\""))
 	response = {"reply_to": request["reply_to"],"at_channel": request["at_channel"]}
 	try:
 		cmd = request["command"]
@@ -50,13 +48,36 @@ def messageReceived(args):
 
 	return response
 
+def tags_to_dict(tags):
+
+	tags_dict = {}
+	for tag in tags.split(","):
+		tag_split = tag.split(":")
+		tags_dict[tag_split[0]] = tag_split[1]
+
+	return tags_dict
+
+def dict_to_tags(dict):
+
+	tags = str(dict)[1:-1].replace(" ", "").replace("'", "")
+
+	return tags
+
 def main(args):
 
-	output = messageReceived([os.getenv("NTFY_MESSAGE")])
+	output = messageReceived(tags_to_dict(os.getenv("NTFY_TAGS")))
 	topic = os.getenv("NTFY_TOPIC")
 	server = args[0]
 	print output
-	sendMessage(str(output),"RESPOSTA",server)
+
+	msg = output.pop("response")
+	tags_str = dict_to_tags(output)
+	headers = {
+		"charset": "UTF-8",
+		"Tags": bytes(tags_str, encoding = 'utf-8')
+	}
+	
+	sendMessage(output=msg,"RESPOSTA",server,headers=headers)
 
 if __name__ == '__main__':
 	args = sys.argv
