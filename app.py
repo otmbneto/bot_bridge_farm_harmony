@@ -10,6 +10,9 @@ load_dotenv()
 
 def sendMessage(message,channel,server,headers = {}):
 
+	print "MESSAGE: " + message
+	print "SERVER:" + server + "/" + channel
+	print "HEADERS:" + str(headers)
 	return requests.post(server + "/" + channel,data=message,headers=headers)
 
 def parseCommand(command,args):
