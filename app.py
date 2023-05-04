@@ -77,7 +77,7 @@ def main(args):
 	tags_str = dict_to_tags(output)
 	headers = {
 		"charset": "UTF-8",
-		"Tags": bytes(tags_str, encoding = 'utf-8')
+		"Tags": str(tags_str)
 	}
 	
 	sendMessage(msg,"RESPOSTA",server,headers=headers)
