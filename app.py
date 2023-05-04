@@ -44,7 +44,7 @@ def messageReceived(request):
 		output = header + output
 		output += "```"
 		output = output.replace("\n","\\n")
-		response["response"] = output
+		response["response"] = output.encode("utf-8").decode("latin1")
 		print "Generating output"
 		print output
 	except Exception as e:
@@ -87,9 +87,7 @@ def main(args):
 		"Tags": str(tags_str)
 	}
 
-	msg_format = msg.encode("utf-8").decode("latin1")
-	print msg_format
-	sendMessage(msg_format,"RESPOSTA",server,headers=headers)
+	sendMessage(msg,"RESPOSTA",server,headers=headers)
 
 if __name__ == '__main__':
 	args = sys.argv
