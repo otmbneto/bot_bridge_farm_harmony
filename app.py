@@ -80,7 +80,7 @@ def main(args):
 		"Tags": bytes(tags_str, encoding = 'utf-8')
 	}
 	
-	sendMessage(output=msg,"RESPOSTA",server,headers=headers)
+	sendMessage(msg,"RESPOSTA",server,headers=headers)
 
 if __name__ == '__main__':
 	args = sys.argv
