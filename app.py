@@ -68,6 +68,9 @@ def dict_to_tags(dict):
 
 def main(args):
 
+
+	request = tags_to_dict(os.getenv("NTFY_TAGS"))
+	request["command"] = os.getenv("NTFY_MESSAGE")
 	output = messageReceived(tags_to_dict(os.getenv("NTFY_TAGS")))
 	topic = os.getenv("NTFY_TOPIC")
 	server = args[0]
