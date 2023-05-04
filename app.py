@@ -33,7 +33,9 @@ def messageReceived(request):
 		cmd = request["command"]
 		print request["args"] 
 		print [os.getenv("QUEUE_CONFIG"),os.getenv("QUEUE_PATH")]
-		args = request["args"] + [os.getenv("QUEUE_CONFIG"),os.getenv("QUEUE_PATH")] #adiciona a fila atual para os argumentos
+		
+		args = request["args"] if "args" in request.keys() else []
+		args += [os.getenv("QUEUE_CONFIG"),os.getenv("QUEUE_PATH")] #adiciona a fila atual para os argumentos
 		output = parseCommand(cmd,args)
 		if output is None:
 			output = "ERRO: Comando desconhecido: {0}".format(args[0])
