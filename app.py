@@ -86,8 +86,10 @@ def main(args):
 		"charset": "UTF-8",
 		"Tags": str(tags_str)
 	}
-	
-	sendMessage(msg,"RESPOSTA",server,headers=headers)
+
+	msg_format = msg.encode("utf-8").decode("latin1")
+	print msg_format
+	sendMessage(msg_format,"RESPOSTA",server,headers=headers)
 
 if __name__ == '__main__':
 	args = sys.argv
