@@ -46,7 +46,7 @@ def messageReceived(request):
 		output = output.replace("\n","\\n")
 		response["response"] = output.encode("utf-8").decode("latin1")
 		print "Generating output"
-		print request["response"]
+		print response["response"]
 	except Exception as e:
 		traceback.print_exc()
 		response["response"] = str(e)
