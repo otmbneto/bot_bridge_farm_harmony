@@ -46,7 +46,7 @@ def messageReceived(request):
 		output = output.replace("\n","\\n")
 		response["response"] = output.encode("utf-8").decode("latin1")
 		print "Generating output"
-		print output
+		print request["response"]
 	except Exception as e:
 		traceback.print_exc()
 		response["response"] = str(e)
@@ -70,7 +70,6 @@ def dict_to_tags(dict):
 
 def main(args):
 
-
 	request = tags_to_dict(os.getenv("NTFY_TAGS"))
 	request["command"] = os.getenv("NTFY_MESSAGE")
 	if not "args" in request.keys():
@@ -78,7 +77,6 @@ def main(args):
 	output = messageReceived(request)
 	topic = os.getenv("NTFY_TOPIC")
 	server = args[0]
-	print output
 
 	msg = output.pop("response")
 	tags_str = dict_to_tags(output)
