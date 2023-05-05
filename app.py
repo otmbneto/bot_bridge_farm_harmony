@@ -43,7 +43,7 @@ def messageReceived(request):
 		header = 'Hello <@{0}>\n```'.format(request["user_id"]) if "user_id" in request.keys() else ""
 		output = header + output
 		output += "```"
-		output = output.replace("\n","\\n")
+		#output = output.replace("\n","\\n")
 		response["response"] = output
 		print "Generating output"
 		print response["response"]
