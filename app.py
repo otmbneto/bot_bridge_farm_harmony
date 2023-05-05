@@ -47,11 +47,20 @@ def messageReceived(request):
 		response["response"] = output.encode("utf-8").decode("latin1")
 		print "Generating output"
 		print response["response"]
+		print whatisthis(response["response"])
 	except Exception as e:
 		traceback.print_exc()
 		response["response"] = str(e)
 
 	return response
+
+def whatisthis(s):
+    if isinstance(s, str):
+        print "ordinary string"
+    elif isinstance(s, unicode):
+        print "unicode string"
+    else:
+        print "not a string"
 
 def tags_to_dict(tags):
 
