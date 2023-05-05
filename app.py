@@ -44,7 +44,7 @@ def messageReceived(request):
 		output = header + output
 		output += "```"
 		output = output.replace("\n","\\n")
-		response["response"] = output.encode("utf-8").decode("latin1")
+		response["response"] = str(output)#.encode("utf-8").decode("latin1")
 		print "Generating output"
 		print response["response"]
 		print whatisthis(response["response"])
