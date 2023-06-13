@@ -122,6 +122,8 @@ def get_renders(keyword,queue=os.getenv("QUEUE_PATH")):
 
   if len(keyword) > 0:
     files = [(files[i],i) for i in range(len(files)) if keyword in sf.get_name(files[i])]
+  else:
+    files = [(files[i],i) for i in range(len(files))]
 
   return files
 
