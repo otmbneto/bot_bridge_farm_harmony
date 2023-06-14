@@ -108,7 +108,7 @@ def getQueuePriority(queue_config = os.getenv("QUEUE_CONFIG")):
 def get_renders(keyword,queue=os.getenv("QUEUE_PATH")):
     
   files = []
-  name = keyword
+  name = keyword if keyword is not None else ""
   
   #queue = os.getenv("QUEUE_PATH")
   #files = [file for file in oc.list(queue) if file.path.endswith(".json")]
@@ -120,8 +120,8 @@ def get_renders(keyword,queue=os.getenv("QUEUE_PATH")):
   else:
     files.sort(key=lambda x:sf.getLastModified(x))
 
-  if len(keyword) > 0:
-    files = [(files[i],i) for i in range(len(files)) if keyword in sf.get_name(files[i])]
+  if len(name) > 0:
+    files = [(files[i],i) for i in range(len(files)) if name in sf.get_name(files[i])]
   else:
     files = [(files[i],i) for i in range(len(files))]
 
