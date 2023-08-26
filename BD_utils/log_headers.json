@@ -1,0 +1,12 @@
+{
+	"table_items": [
+		"scene",
+		"animator",
+		"version",
+		"status",
+		"step",
+		"queued",
+		"queue_computer",
+		"started_at"
+	]
+}
