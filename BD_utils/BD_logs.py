@@ -6,7 +6,7 @@ from BD_json import *
 
 
 def get_header_json():
-    return os.path.join(os.curdir, "log_headers.json")
+    return os.path.join(os.path.dirname(__file__), "log_headers.json")
 
 
 def get_table_headers():
