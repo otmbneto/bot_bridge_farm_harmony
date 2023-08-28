@@ -1,0 +1,5 @@
+{"!check":["checkRenderStatus","Retorna o status das cenas na fila;E possivel usar uma palavra-chave pra filtrar a busca.\nUso: !check-<palavra-chave>\n"],
+"!status":["getQueueStatus","Retorna o status geral das filas de render,incluindo tamanhos das filas e render atual.\nUso: !status\n"],
+"!help":["getCommands","Retorna a lista de comandos que o robirdo e capaz de enviar neste canal."],
+"!changePriority": ["changeRenderPriority","Muda a prioridade das filas de render.\nUso: !changePriority-EP<numero-do-episodio>"]
+}
