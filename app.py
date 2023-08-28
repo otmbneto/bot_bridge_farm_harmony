@@ -100,7 +100,7 @@ def main(args):
         "filename": os.path.basename(attach) if attach else None
     }
 
-    sendMessage(msg, "RESPOSTA", server, headers=headers)
+    print sendMessage(msg, "RESPOSTA", server, headers=headers)
 
 
 if __name__ == '__main__':
