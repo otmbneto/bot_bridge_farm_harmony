@@ -97,7 +97,7 @@ def main(args):
         "charset": "UTF-8",
         "Tags": str(tags_str),
         "attach": attach,
-        "filename": os.path.basename(attach)
+        "filename": os.path.basename(attach) if attach else None
     }
 
     sendMessage(msg, "RESPOSTA", server, headers=headers)
