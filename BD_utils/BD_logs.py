@@ -3,7 +3,6 @@ import os
 import shutil
 from BD_tables import create_table
 from BD_json import *
-from tqdm import tqdm
 
 
 def get_header_json():
@@ -44,7 +43,7 @@ def list_log_files(keyword, folder_list):
             return False
         file_list = os.listdir(log_folder)
         counter = 0
-        for json_f in tqdm(file_list):
+        for json_f in file_list:
             if keyword in json_f:
                 json_path = os.path.join(log_folder, json_f)
                 json_data_list.append(format_dict_json_item(json_path))
