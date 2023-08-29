@@ -9,11 +9,17 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-def sendMessage(message, channel, server, headers={}):
-    print "MESSAGE: " + message
-    print "SERVER:" + server + "/" + channel
-    print "HEADERS:" + str(headers)
-    return requests.post(server + "/" + channel, data=message, headers=headers)
+def sendMessage(message, channel, server, attachment, headers={}):
+    server_channel = server + "/" + channel
+    print "MESSAGE: {0}".format(message)
+    print "SERVER: {0}".format(server_channel)
+    print "HEADERS: {0}".format(headers)
+    if bool(attachment):
+        headers["Filename"] = os.path.basename(attachment)
+        headers["Message"] = message
+        return requests.put(server_channel, data=open(attachment, "rb"), headers=headers)
+    else:
+        return requests.post(server_channel, data=message, headers=headers)
 
 
 def parseCommand(command, args):
@@ -40,11 +46,12 @@ def messageReceived(request):
         if output is None:
             output = "ERRO: Comando desconhecido: {0}".format(args[0])
 
-        header = 'Hello <@{0}>\n```'.format(request["user_id"]) if "user_id" in request.keys() else ""
+        header = 'Hello <@{0}>'.format(request["user_id"]) if "user_id" in request.keys() else "Hello!"
+        # test if output is a file path
         if os.path.isfile(output) and os.path.exists(output):
             msg = header
         else:
-            msg = header + output + "```"
+            msg = "{0}\n```{1}\n```".format(header, output)
 
         response["response"] = msg
         response["attach"] = output if os.path.isfile(output) and os.path.exists(output) else None
@@ -95,12 +102,10 @@ def main(args):
     tags_str = dict_to_tags(output)
     headers = {
         "charset": "UTF-8",
-        "Tags": str(tags_str),
-        "attach": attach,
-        "filename": os.path.basename(attach) if attach else None
+        "Tags": str(tags_str)
     }
 
-    print sendMessage(msg, "RESPOSTA", server, headers=headers)
+    print sendMessage(msg, "RESPOSTA", server, attach, headers=headers)
 
 
 if __name__ == '__main__':
