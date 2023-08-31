@@ -1,12 +1,20 @@
 import re
 import os
 import shutil
+from datetime import datetime
 from BD_tables import create_table
 from BD_json import *
 
 
 def get_header_json():
     return os.path.join(os.path.dirname(__file__), "log_headers.json")
+
+
+def write_header_list(headers_file, h_list):
+    with open(headers_file, "w") as f:
+        f.writelines([','.join(h_list) + "\n", "\n",
+                      "# listar os nomes de cada item possivel para usar no cabecalho da tabela de log gerado pelo bot !log (separado por virgula)"])
+    return "project header list updated!"
 
 
 def get_table_headers():
@@ -16,20 +24,27 @@ def get_table_headers():
     if not header_data:
         print "error getting json header data!"
         return False
-    return header_data
+    return header_data["table_items"]
 
 
-def get_project_headers(fazendinha_folder):
-    """retorna a lista de itens do header usados no projeto"""
-    headers_file = os.path.join(os.path.dirname(fazendinha_folder), "log_headers.txt")
+def get_project_header_txt(fazendinha_folder):
+    headers_file = os.path.join(os.path.dirname(re.sub(r'(\\|\/)$', "", fazendinha_folder)), "log_headers.txt")
     # cria o arquivo txt com lista de items do projeto caso ainda nao exista
     if not os.path.exists(headers_file):
         available_headers = get_table_headers()
         if not available_headers:
             return False
-        with open(headers_file, "w") as f:
-            f.writelines([str(available_headers["table_items"]) +"\n", "\n", "# listar os nomes de cada item possivel para usar no cabecalho da tabela de log gerado pelo bot !log (separado por virgula)"])
-    with open(headers_file) as f:
+        print write_header_list(headers_file, available_headers)
+    return headers_file
+
+
+def get_project_headers(fazendinha_folder):
+    """retorna a lista de itens do header usados no projeto"""
+    headers_file = get_project_header_txt(fazendinha_folder)
+    if not headers_file:
+        print "fail to get headers list!"
+        return False
+    with open(headers_file, "r") as f:
         line = f.readlines()
     return line[0].replace("\n", "").split(",")
 
@@ -71,7 +86,7 @@ def list_log_files(keyword, folder_list):
                 json_data_list.append(format_dict_json_item(json_path))
                 counter += 1
         print "{0} files found in folder: {1}".format(counter, folder)
-    return sorted(json_data_list, key=lambda x: x["queued"])
+    return sorted(json_data_list, key=lambda x: datetime.strptime(x["queued"], "%d/%m/%Y, %H:%M:%S"))
 
 
 def validate_input(keyword):
@@ -79,7 +94,8 @@ def validate_input(keyword):
     input_regex = {
         "episode": r"^EP\d{3}$",
         "scene": r"^EP\d{3}_SC\d{4}$",
-        "date": r"^(20\d{2}[0-1]\d[0-3]\d)$"
+        "date": r"^(20\d{2}[0-1]\d[0-3]\d)$",
+        "header": r"^header:?(add:\w+|remove:\w+|\w+:\d+)?$"
     }
     for item in input_regex:
         if bool(re.match(input_regex[item], keyword)):
@@ -114,9 +130,73 @@ def create_temp_log_file(file_name, table):
     return temp_file
 
 
+def print_header_list(fazendinha_folder):
+    p_headers = get_project_headers(fazendinha_folder)
+    g_headers = get_table_headers()
+    h_str = " ** HEADERS IN PROJECT **\n"
+    i = 0
+    for item in p_headers:
+        h_str += "[{0}] - {1}\n".format(i, item)
+        i += 1
+    h_str += "\nHeaders commands are:\n - header => 'print commands'\n"
+    h_str += " - header:add:<item> => 'add item from unused items list to project headers list'\n"
+    h_str += " - header:remove:<item> => 'remove item from project headers list'\n"
+    h_str += " - header:<item>:<index> => 'change item index in header list order'\n"
+    h_str += "\n-Unused items: '{0}'".format(",".join(list(set(g_headers) - set(p_headers))))
+    print h_str
+
+
+def add_item_header(item, fazendinha_folder):
+    """add item to header project txt file"""
+    h_list = get_project_headers(fazendinha_folder)
+    if item in h_list:
+        return "item '{0}' is already at headers list!".format(item)
+    new_list = h_list.append(item)
+    return write_header_list(get_project_header_txt(fazendinha_folder), new_list)
+
+
+def remove_item_header(item, fazendinha_folder):
+    """remove item from header project txt file"""
+    p_h_list = get_project_headers(fazendinha_folder)
+    if not p_h_list:
+        return "ERROR! can't read project headers file!"
+    if item not in p_h_list:
+        return "Item {0} is not in current project headers list!"
+    p_h_list.remove(item)
+    return write_header_list(get_project_header_txt(fazendinha_folder), p_h_list)
+
+
 def update_item_index(item, my_list, new_index):
     """atualiza o index do item na lista e retorna nova lista"""
     current_index = my_list.index(item)
     element = my_list.pop(current_index)
     my_list.insert(new_index, element)
     return my_list
+
+
+def header_action(header_cmd, fazendinha_folder):
+    """funcao de acao dos comandos de header"""
+    cmds = header_cmd.split(":")
+    if len(cmds) == 0:
+        return print_header_list(fazendinha_folder)
+    elif len(cmds) < 3:
+        return "ERROR! Invalid command! Insufficient parameters!"
+
+    # add action
+    if cmds[1] == "add":
+        available_headers = get_table_headers()
+        if not available_headers:
+            return "ERROR! can't read headers file!"
+        if not cmds[2] in available_headers:
+            return "ERRO! add value is not in valid header's list!"
+        return add_item_header(cmds[2], fazendinha_folder)
+
+    # remove action
+    elif cmds[1] == "remove":
+        print "removing item from headers list..."
+        return remove_item_header(cmds[2], fazendinha_folder)
+
+    # change item index action
+    else:
+        print "criar update index function!"
+        return "-- funcao em construcao! -- "

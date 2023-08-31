@@ -219,6 +219,8 @@ def getFarmLog(args):
         return err
     else:
         print "- input : {0}\n- input type: {1}".format(input_data[0], input_data[1])
+        if input_data[1] == "header":
+            return header_action(keyword, queues[0])
     try:
         table = create_logs_tab(keyword, queues, input_data)
     except Exception as e:
@@ -231,16 +233,5 @@ def getFarmLog(args):
         print err
         return err
     return table_file
-
-
-def logUpdate(args):
-    if len(args) > 0:
-        queues = args[-1].split(",")
-        keyword = args[0]
-    else:
-        err = "error! invalid arguments!"
-        print err
-        return err
-
 
 ########################################################################################
