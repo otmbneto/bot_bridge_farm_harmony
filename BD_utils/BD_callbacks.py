@@ -232,4 +232,15 @@ def getFarmLog(args):
         return err
     return table_file
 
+
+def logUpdate(args):
+    if len(args) > 0:
+        queues = args[-1].split(",")
+        keyword = args[0]
+    else:
+        err = "error! invalid arguments!"
+        print err
+        return err
+
+
 ########################################################################################

@@ -7,6 +7,8 @@
 		"step",
 		"queued",
 		"queue_computer",
-		"started_at"
+		"started_at",
+		"render_tries",
+		"render_type"
 	]
 }

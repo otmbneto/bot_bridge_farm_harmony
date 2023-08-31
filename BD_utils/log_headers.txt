@@ -1,0 +1,3 @@
+scene,animator,version,status,step,queued,queue_computer,started_at
+
+# listar os nomes de cada item possivel para usar no cabecalho da tabela de log gerado pelo bot !log (separado por virgula)
