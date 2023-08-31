@@ -58,7 +58,7 @@ def format_dict_json_item(json_file):
         comp_queue = None
     formatted_data = {
         "scene": re.findall(r'\w{3}_EP\d{3}_SC\d{4}', os.path.basename(json_file))[0],
-        "animator": item_data["animator"] if "animator" in item_data else None,
+        "animator": item_data["animator"].encode('utf-8').strip() if "animator" in item_data else None,
         "version": item_data["version"] if "version" in item_data else None,
         "status": item_data["status"] if "status" in item_data else None,
         "step": item_data["step"] if "step" in item_data else None,

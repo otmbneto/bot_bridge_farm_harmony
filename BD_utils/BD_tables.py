@@ -13,7 +13,7 @@ def get_column_length(data_list, column):
 def format_string_length(string, length):
     num_blank = (length - len(str(string)))
     blank_spaces = " " * num_blank
-    return "{0}{1} |".format(string.encode('utf-8').strip(), blank_spaces)
+    return "{0}{1} |".format(string, blank_spaces)
 
 
 def create_title_header(input_data, header_length):
