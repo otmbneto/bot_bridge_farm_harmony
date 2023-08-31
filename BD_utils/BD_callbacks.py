@@ -208,15 +208,11 @@ def getFarmLog(args):
         queues = args[-1].split(",")
         keyword = args[0]
     else:
-        err = "error! invalid arguments!"
-        print err
-        return err
+        return "error! invalid arguments!"
 
     input_data = validate_input(keyword)
     if not input_data:
-        err = "invalid input!"
-        print err
-        return err
+        return "invalid input!"
     else:
         print "- input : {0}\n- input type: {1}".format(input_data[0], input_data[1])
         if input_data[1] == "header":

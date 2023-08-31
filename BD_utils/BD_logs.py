@@ -138,11 +138,11 @@ def print_header_list(fazendinha_folder):
     for item in p_headers:
         h_str += "[{0}] - {1}\n".format(i, item)
         i += 1
+    h_str += "\n ** UNUSED ITEMS **\n - {0}\n".format("\n - ".join(list(set(g_headers) - set(p_headers))))
     h_str += "\nHeaders commands are:\n - header => 'print commands'\n"
     h_str += " - header:add:<item> => 'add item from unused items list to project headers list'\n"
     h_str += " - header:remove:<item> => 'remove item from project headers list'\n"
     h_str += " - header:<item>:<index> => 'change item index in header list order'\n"
-    h_str += "\n-Unused items: '{0}'".format(",".join(list(set(g_headers) - set(p_headers))))
     print h_str
 
 
@@ -151,8 +151,8 @@ def add_item_header(item, fazendinha_folder):
     h_list = get_project_headers(fazendinha_folder)
     if item in h_list:
         return "item '{0}' is already at headers list!".format(item)
-    new_list = h_list.append(item)
-    return write_header_list(get_project_header_txt(fazendinha_folder), new_list)
+    h_list.append(item)
+    return write_header_list(get_project_header_txt(fazendinha_folder), h_list)
 
 
 def remove_item_header(item, fazendinha_folder):
@@ -177,7 +177,7 @@ def update_item_index(item, my_list, new_index):
 def header_action(header_cmd, fazendinha_folder):
     """funcao de acao dos comandos de header"""
     cmds = header_cmd.split(":")
-    if len(cmds) == 0:
+    if len(cmds) == 1:
         return print_header_list(fazendinha_folder)
     elif len(cmds) < 3:
         return "ERROR! Invalid command! Insufficient parameters!"

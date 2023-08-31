@@ -17,6 +17,6 @@
 	],
 	"!log": [
 		"getFarmLog", 
-		"Retorna uma tabela detalhada com informacoes dos registros de log da Fazendinha.\nOpcoes de Uso:\n !log-EP<numero-do-episodio>\n !log-EP<numero-do-episodio>_SC<numero-da-cena>\n log-<dia-do-log-no-formato-AAAAMMDD"
+		"Retorna uma tabela detalhada com informacoes dos registros de log da Fazendinha.\nOpcoes de Uso:\n !log-EP<numero-do-episodio>\n !log-EP<numero-do-episodio>_SC<numero-da-cena>\n !log-<dia-do-log-no-formato-AAAAMMDD>\n !log-header\n"
 	]
 }
