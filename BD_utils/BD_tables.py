@@ -16,15 +16,15 @@ def format_string_length(string, length):
     return "{0}{1} |".format(string, blank_spaces)
 
 
-def create_title_header(input_data, header_length):
-    keyword = input_data[0]
-    input_type = input_data[1]
+def create_title_header(input_data, header_length, items_count):
     divisor = " " + ("*" * header_length)
-    titlel1 = "|    log input: {0} => type: {1}".format(keyword, input_type)
+    titlel1 = "|    log input: {0} => type: {1}".format(input_data["keyword"], input_data["type"])
     titlel1 += (header_length - len(titlel1)) * " "
     titlel2 = "|    log date: {0}".format(datetime.now())
     titlel2 += (header_length - len(titlel2)) * " "
-    return "{0}\n{1} |\n{2} |\n{3}".format(divisor, titlel1, titlel2, divisor)
+    titlel3 = "|    log entries: {0}".format(items_count)
+    titlel3 += (header_length - len(titlel2)) * " "
+    return "{0}\n{1} |\n{2} |\n{3} |\n{4}".format(divisor, titlel1, titlel2, titlel3, divisor)
 
 
 def create_table(header_list, data_list, input_data):
@@ -32,7 +32,7 @@ def create_table(header_list, data_list, input_data):
     header_str = ""
     for i in header:
         header_str += i
-    title = create_title_header(input_data, len(header_str) - 2)
+    title = create_title_header(input_data, (len(header_str) - 2), len(data_list))
     lines = []
     for row in data_list:
         line = ["| {0}".format(format_string_length(row[item], get_column_length(data_list, item))) for item in header_list]

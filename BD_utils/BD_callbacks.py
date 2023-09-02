@@ -214,16 +214,16 @@ def getFarmLog(args):
     if not input_data:
         return "invalid input!"
     else:
-        print "- input : {0}\n- input type: {1}".format(input_data[0], input_data[1])
-        if input_data[1] == "header":
-            return header_action(keyword, queues[0])
+        print "- input : {0}\n- input type: {1}\n- filter: {2}\n".format(input_data["keyword"], input_data["type"], input_data["filter"])
+        if input_data["type"] == "header":
+            return header_action(input_data["keyword"], queues[0])
     try:
-        table = create_logs_tab(keyword, queues, input_data)
+        table = create_logs_tab(queues, input_data)
     except Exception as e:
         print str(e)
         return str(e)
 
-    table_file = create_temp_log_file("log_{0}_{1}".format(input_data[1], input_data[0]), table)
+    table_file = create_temp_log_file("log_{0}_{1}".format(input_data["type"], input_data["keyword"]), table)
     if not os.path.exists(table_file):
         err = "something went wrong creating temporary table file!"
         print err
