@@ -219,6 +219,8 @@ def getFarmLog(args):
             return header_action(input_data["keyword"], queues[0])
     try:
         table = create_logs_tab(queues, input_data)
+        if not table:
+            return "ERROR! Invalid input search value!"
     except Exception as e:
         print str(e)
         return str(e)

@@ -18,12 +18,12 @@ def format_string_length(string, length):
 
 def create_title_header(input_data, header_length, items_count):
     divisor = " " + ("*" * header_length)
-    titlel1 = "|    log input: {0} => type: {1}".format(input_data["keyword"], input_data["type"])
+    titlel1 = "|    log input: {0} => type: {1} => filter: {2}".format(input_data["keyword"], input_data["type"], input_data["filter"])
     titlel1 += (header_length - len(titlel1)) * " "
     titlel2 = "|    log date: {0}".format(datetime.now())
     titlel2 += (header_length - len(titlel2)) * " "
     titlel3 = "|    log entries: {0}".format(items_count)
-    titlel3 += (header_length - len(titlel2)) * " "
+    titlel3 += (header_length - len(titlel3)) * " "
     return "{0}\n{1} |\n{2} |\n{3} |\n{4}".format(divisor, titlel1, titlel2, titlel3, divisor)
 
 
