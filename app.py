@@ -98,7 +98,7 @@ def main(args):
     server = args[0]
 
     msg = output.pop("response")
-    attach = output.pop("attach")
+    attach = output.pop("attach") if "attach" in output.keys() else False
     tags_str = dict_to_tags(output)
     headers = {
         "charset": "UTF-8",
