@@ -43,8 +43,13 @@ def get_queue_files(queue=os.getenv("QUEUE_PATH")):
 
 def date_diff(date_1, date_2):
     date_format_str = '%d/%m/%Y, %H:%M:%S'
-    start = datetime.datetime.strptime(date_1, date_format_str)
-    end = datetime.datetime.strptime(date_2, date_format_str)
+    try:
+        start = datetime.datetime.strptime(date_1, date_format_str)
+        end = datetime.datetime.strptime(date_2, date_format_str)
+    except:
+        #have no idea why this is happenning(maybe it is comming from another module?)
+        start = datetime.strptime(date_1, date_format_str)
+        end = datetime.strptime(date_2, date_format_str)
 
     return end - start
 
