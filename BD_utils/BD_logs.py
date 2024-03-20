@@ -3,8 +3,8 @@ import re
 import os
 import shutil
 from datetime import datetime
-from BD_tables import create_table
-from BD_json import *
+from .BD_tables import create_table
+from .BD_json import *
 
 
 def get_header_json():
@@ -23,7 +23,7 @@ def get_table_headers():
     h_json = get_header_json()
     header_data = read_json_file(h_json)
     if not header_data:
-        print "error getting json header data!"
+        print("error getting json header data!")
         return False
     return header_data["table_items"]
 
@@ -35,7 +35,7 @@ def get_project_header_txt(fazendinha_folder):
         available_headers = get_table_headers()
         if not available_headers:
             return False
-        print write_header_list(headers_file, available_headers)
+        print(write_header_list(headers_file, available_headers))
     return headers_file
 
 
@@ -43,7 +43,7 @@ def get_project_headers(fazendinha_folder):
     """retorna a lista de itens do header usados no projeto"""
     headers_file = get_project_header_txt(fazendinha_folder)
     if not headers_file:
-        print "fail to get headers list!"
+        print("fail to get headers list!")
         return False
     with open(headers_file, "r") as f:
         line = f.readlines()
@@ -79,7 +79,7 @@ def list_log_files(keyword, folder_list, search_filter=None):
     for folder in folder_list:
         log_folder = os.path.join(folder, "_logs")
         if not os.path.exists(log_folder):
-            print "ERROR! Log folder not found: {0}".format(log_folder)
+            print("ERROR! Log folder not found: {0}".format(log_folder))
             return False
         file_list = os.listdir(log_folder)
         counter = 0
@@ -91,7 +91,6 @@ def list_log_files(keyword, folder_list, search_filter=None):
                     continue
                 json_data_list.append(formatted_data)
                 counter += 1
-        print "{0} files found in folder: {1}".format(counter, folder)
     return sorted(json_data_list, key=lambda x: datetime.strptime(x["queued"], "%d/%m/%Y, %H:%M:%S"))
 
 
@@ -123,14 +122,12 @@ def create_logs_tab(log_folders, input_data):
     """creates tables with logs found for input scene/ep/date"""
     table_headers = get_project_headers(log_folders[0])
     if not table_headers:
-        print "ERROR! Invalid header json file configured!"
+        print("ERROR! Invalid header json file configured!")
         return False
-    print "listing json queue files..."
     queue_data_list = list_log_files(input_data["keyword"], log_folders, input_data["filter"])
     if not queue_data_list:
         return False
 
-    print "creating table..."
     table = create_table(table_headers, queue_data_list, input_data)
     return table
 
@@ -209,10 +206,8 @@ def header_action(header_cmd, fazendinha_folder):
 
     # remove action
     elif cmds[1] == "remove":
-        print "removing item from headers list..."
         return remove_item_header(cmds[2], fazendinha_folder)
 
     # change item index action
     else:
-        print "criar update index function!"
         return "-- funcao em construcao! -- "

@@ -2,9 +2,9 @@
 import os
 import datetime
 import time
-from BD_json import *
-from BD_server import *
-from BD_logs import *
+from .BD_json import *
+from .BD_server import *
+from .BD_logs import *
 
 sf = ServerFile("VPN")
 
@@ -14,8 +14,6 @@ sf = ServerFile("VPN")
 ########################################################################################
 
 def getRoutes(script_path=os.path.abspath(os.path.dirname(__file__))):
-    # script_path = os.path.abspath(os.path.dirname(__file__))
-    print script_path
     json_path = os.path.join(script_path, "functions.json").replace("\\", "/")
     if not os.path.exists(json_path):
         return {}
@@ -63,11 +61,6 @@ def getRenderTime(scene_file):
 
     return renderTime
 
-
-# def getFileContent(oc_file):
-
-#  return sf.getFileContent(oc_file)
-
 def get_current_render(files):
     return filter(rendering_files, files)
 
@@ -82,7 +75,6 @@ def getQueueStatus(args):
         queues = args[-1].split(",")
     else:
         err = "invalid args number!"
-        print err
         return err
     output = ""
     for queue in queues:
@@ -148,7 +140,6 @@ def checkRenderStatus(args):
 
     output = ""
     for queue in queues:
-        print queue
         scenes = get_renders(keyword, queue=queue)
         queue_name = os.path.basename(queue if not queue.endswith(("\\", "/")) else queue[:-1])
         msg = "FILA: {0}\n".format(queue_name)
@@ -173,7 +164,6 @@ def checkRenderStatus(args):
 
 def setQueuePriority(priority, queue_config=os.getenv("QUEUE_CONFIG")):
     status = "ERROR: Failed to chande render priority."
-    print queue_config
     if queue_config is not None and os.path.exists(queue_config):
         data = read_json_file(queue_config)
         data["Harmony"] = {"priority": priority}
@@ -191,11 +181,9 @@ def changeRenderPriority(args):
         queue_config = args[-2]
     else:
         err = "invalid args!"
-        print err
         return err
 
     output = setQueuePriority(keyword, queue_config=queue_config)
-
     return unicode(output, "utf-8")
 
 
@@ -219,7 +207,6 @@ def getFarmLog(args):
     if not input_data:
         return "invalid input!"
     else:
-        print "- input : {0}\n- input type: {1}\n- filter: {2}\n".format(input_data["keyword"], input_data["type"], input_data["filter"])
         if input_data["type"] == "header":
             return header_action(input_data["keyword"], queues[0])
     try:
@@ -227,13 +214,11 @@ def getFarmLog(args):
         if not table:
             return "ERROR! Invalid input search value!"
     except Exception as e:
-        print str(e)
         return str(e)
 
     table_file = create_temp_log_file("log_{0}_{1}".format(input_data["type"], input_data["keyword"]), table)
     if not os.path.exists(table_file):
         err = "something went wrong creating temporary table file!"
-        print err
         return err
     return table_file
 

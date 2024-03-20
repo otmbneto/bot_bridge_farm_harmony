@@ -8,12 +8,11 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-
 def sendMessage(message, channel, server, attachment, headers={}):
     server_channel = server + "/" + channel
-    print "MESSAGE: {0}".format(message)
-    print "SERVER: {0}".format(server_channel)
-    print "HEADERS: {0}".format(headers)
+    print("MESSAGE: {0}".format(message))
+    print("SERVER: {0}".format(server_channel))
+    print("HEADERS: {0}".format(headers))
     if bool(attachment):
         headers["Filename"] = os.path.basename(attachment)
         headers["Message"] = message
@@ -24,8 +23,6 @@ def sendMessage(message, channel, server, attachment, headers={}):
 
 def parseCommand(command, args):
     output = None
-    print command
-    print args
     f = getRoute(command, script_path=os.path.abspath(os.path.dirname(__file__)))
     if f is not None:
         output = eval(f + "(" + str(args) + ")")
@@ -37,9 +34,6 @@ def messageReceived(request):
     response = {"reply_to": request["reply_to"], "at_channel": request["at_channel"]}
     try:
         cmd = request["command"]
-        print request["args"]
-        print [os.getenv("QUEUE_CONFIG"), os.getenv("QUEUE_PATH")]
-
         args = request["args"] if "args" in request.keys() else []
         args += [os.getenv("QUEUE_CONFIG"), os.getenv("QUEUE_PATH")]  # adiciona a fila atual para os argumentos
         output = parseCommand(cmd, args)
@@ -55,9 +49,6 @@ def messageReceived(request):
 
         response["response"] = msg
         response["attach"] = output if os.path.isfile(output) and os.path.exists(output) else None
-        print "Generating output"
-        print response["response"]
-        print whatisthis(response["response"])
     except Exception as e:
         traceback.print_exc()
         response["response"] = str(e)
@@ -67,11 +58,11 @@ def messageReceived(request):
 
 def whatisthis(s):
     if isinstance(s, str):
-        print "ordinary string"
+        print("ordinary string")
     elif isinstance(s, unicode):
-        print "unicode string"
+        print("unicode string")
     else:
-        print "not a string"
+        print("not a string")
 
 
 def tags_to_dict(tags):
@@ -90,6 +81,8 @@ def dict_to_tags(dict):
 
 
 def main(args):
+
+    print("args 0: " + args[0])
     request = tags_to_dict(os.getenv("NTFY_TAGS"))
     message = os.getenv("NTFY_MESSAGE").split("-")
     request["command"] = message[0]
@@ -105,7 +98,7 @@ def main(args):
         "Tags": str(tags_str)
     }
 
-    print sendMessage(msg, "RESPOSTA", server, attach, headers=headers)
+    print(sendMessage(msg, "RESPOSTA", server, attach, headers=headers))
 
 
 if __name__ == '__main__':
