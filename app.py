@@ -77,7 +77,7 @@ def tags_to_dict(tags):
 
 
 def dict_to_tags(dict):
-    tags = {}
+    tags = ""
     if tags is not None:
         tags = str(dict)[1:-1].replace(" ", "").replace("'", "")
     return tags
