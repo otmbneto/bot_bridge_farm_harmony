@@ -66,23 +66,25 @@ def whatisthis(s):
 
 
 def tags_to_dict(tags):
+    
     tags_dict = {}
-    for tag in tags.split(","):
-        tag_split = tag.split(":")
-        tags_dict[tag_split[0]] = tag_split[1]
+    if tags is not None:
+        for tag in tags.split(","):
+            tag_split = tag.split(":")
+            tags_dict[tag_split[0]] = tag_split[1]
 
     return tags_dict
 
 
 def dict_to_tags(dict):
-    tags = str(dict)[1:-1].replace(" ", "").replace("'", "")
-
+    tags = {}
+    if tags is not None:
+        tags = str(dict)[1:-1].replace(" ", "").replace("'", "")
     return tags
 
 
 def main(args):
 
-    print("args 0: " + args[0])
     request = tags_to_dict(os.getenv("NTFY_TAGS"))
     message = os.getenv("NTFY_MESSAGE").split("-")
     request["command"] = message[0]
