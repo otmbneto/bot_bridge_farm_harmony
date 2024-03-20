@@ -92,7 +92,7 @@ def main(args):
 
     request = tags_to_dict(os.getenv("NTFY_TAGS"))
     message = os.getenv("NTFY_MESSAGE").split("-") if os.getenv("NTFY_MESSAGE") is not None else []
-    request["command"] = message[0]
+    request["command"] = message[0] if len(message) > 0 else ""
     request["args"] = message[1:]
     output = messageReceived(request)
     server = args[0]
