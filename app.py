@@ -31,6 +31,11 @@ def parseCommand(command, args):
 
 
 def messageReceived(request):
+
+    if not "reply_to" in request.keys() or not "at_channel" in request.keys():
+        print("Error: received request is incomplete")
+        return None
+
     response = {"reply_to": request["reply_to"], "at_channel": request["at_channel"]}
     try:
         cmd = request["command"]
@@ -86,13 +91,13 @@ def dict_to_tags(dict):
 def main(args):
 
     request = tags_to_dict(os.getenv("NTFY_TAGS"))
-    message = os.getenv("NTFY_MESSAGE").split("-")
+    message = os.getenv("NTFY_MESSAGE").split("-") if os.getenv("NTFY_MESSAGE") is not None else []
     request["command"] = message[0]
     request["args"] = message[1:]
     output = messageReceived(request)
     server = args[0]
 
-    msg = output.pop("response")
+    msg = output.pop("response") if output is not None else "Error: message is incomplete"
     attach = output.pop("attach") if "attach" in output.keys() else False
     tags_str = dict_to_tags(output)
     headers = {
